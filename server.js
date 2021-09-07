@@ -13,7 +13,7 @@ const PORT = process.env.PORT;
 class Forecast {
     constructor(date,description){
         this.date = date;
-        this.description = description;
+        this.description = `low of ${description.low_temp}, high of ${description.high_temp} with ${description.weather.description}`;
     }
     
 }
@@ -28,7 +28,7 @@ server.get('/weather',(req,res) => {
         return 'ERROR, no city data';
     })
     let objArr = result.data.map(item => {
-        let newObject = new Forecast(item.datetime,item.weather.description)
+        let newObject = new Forecast(item.datetime,item)
         return newObject;
     });
     res.send(objArr);
