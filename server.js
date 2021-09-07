@@ -11,9 +11,9 @@ server.use(cors());
 const PORT = process.env.PORT;
 
 class Forecast {
-    constructor(date,description){
-        this.date = date;
-        this.description = `low of ${description.low_temp}, high of ${description.high_temp} with ${description.weather.description}`;
+    constructor(item){
+        this.date = item.valid_date;
+        this.description = `low of ${item.low_temp}, high of ${item.high_temp} with ${item.weather.description}`;
     }
     
 }
@@ -22,13 +22,18 @@ server.get('/weather',(req,res) => {
     const latitude = req.query.lat;
     const longitude = req.query.lon;
     const result = weatherData.find(item => {
-        if(item.lat === latitude && item.lon === longitude)
-        return item.data;
-        else
-        return 'ERROR, no city data';
-    })
+        if(item.lat == latitude && item.lon == longitude){
+            return item;
+        }else{
+            console.log('err');
+        }
+    
+    });
+    console.log(result);
     let objArr = result.data.map(item => {
-        let newObject = new Forecast(item.datetime,item)
+        // console.log(item);
+        let newObject = new Forecast(item)
+        
         return newObject;
     });
     res.send(objArr);
